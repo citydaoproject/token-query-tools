@@ -7,6 +7,12 @@ export interface OwnerNFTs {
   [ownerAddress: string]: string[];
 }
 
+export interface TokenOwner {
+  tokenId: string;
+  ownerAddress: string;
+  amount: string;
+}
+
 export interface CitizenOwner {
   ownerAddress: string;
   first: number;
@@ -19,9 +25,9 @@ export interface CitizenOwnerCounts {
 }
 
 export enum CitizenTokenType {
-  first = 7,
-  founder = 69,
-  citizen = 42,
+  first = '7',
+  founder = '69',
+  citizen = '42',
 }
 
 interface OwnerAndNFTs {
@@ -44,6 +50,36 @@ export const groupNFTsByOwner = (owners: NFTOwner[]): OwnerNFTs =>
     ].map(sortNFTIds),
     ({ ownerAddress, nftIds }) => [ownerAddress, nftIds],
   );
+
+export const buildCitizenOwners = (owners: TokenOwner[]): CitizenOwner[] => [
+  ...owners
+    .reduce((tokensByOwner, { ownerAddress, tokenId, amount }) => {
+      const amountNum = parseInt(amount, 0);
+
+      let citizen = tokensByOwner.get(ownerAddress) || { ownerAddress, first: 0, founder: 0, citizen: 0 };
+      switch (tokenId) {
+        case CitizenTokenType.first:
+          citizen = { ...citizen, first: amountNum };
+          break;
+
+        case CitizenTokenType.founder:
+          citizen = { ...citizen, founder: amountNum };
+          break;
+
+        case CitizenTokenType.citizen:
+          citizen = { ...citizen, citizen: amountNum };
+          break;
+
+        default:
+          console.warn(`Unknown token ${tokenId} found for address ${ownerAddress}`);
+      }
+
+      tokensByOwner.set(ownerAddress, citizen);
+
+      return tokensByOwner;
+    }, new Map<string, CitizenOwner>())
+    .values(),
+];
 
 const sortNFTIds = ({ ownerAddress, nftIds }: OwnerAndNFTs) => ({
   ownerAddress,

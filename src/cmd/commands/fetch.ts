@@ -17,11 +17,18 @@ program
     fetchNFTOwners(address, outputFile, { byOwner }),
   );
 
+interface CitizenOwnersParams {
+  address: string;
+  outputFile: string;
+  totalsByOwner?: boolean;
+}
+
 program
   .command('citizen-owners')
   .description('Query citizen owners. Note: currently only works with ERC1155-based citizen tokens')
   .requiredOption('--address <address>', 'The citizen token address')
   .requiredOption('--output-file <file>', 'The file to store the token owner addresses per ID')
-  .action(({ address, outputFile }: NFTOwnersParams, cmd: ProgramSubCommand) =>
-    fetchCitizenOwners(address, outputFile),
+  .option('--totals-by-owner', 'Builds a map of the totals by owner')
+  .action(({ address, outputFile, totalsByOwner }: CitizenOwnersParams, cmd: ProgramSubCommand) =>
+    fetchCitizenOwners(address, outputFile, { totalsByOwner }),
   );

@@ -1,7 +1,7 @@
 import { RateLimiter } from 'limiter';
 import Moralis from 'moralis/node';
 import { moralisApplicationId, moralisPageLimit, moralisRateLimitPerMinute, moralisServerUrl } from './config';
-import { NFTOwner } from './owners';
+import { NFTOwner, TokenOwner } from './owners';
 
 export const fetchAllNFTOwners = async (address: string): Promise<NFTOwner[]> =>
   fetchAll((cursor) => fetchNFTOwners(address, cursor));
@@ -11,6 +11,28 @@ const fetchNFTOwners = async (address: string, cursor?: string): Promise<Moralis
 
   return {
     data: response.result?.map(({ token_id, owner_of }) => ({ nftId: token_id, ownerAddress: owner_of })) || [],
+    cursor: response.cursor,
+    page: response.page || 0,
+    pageSize: response.page_size || 0,
+    total: response.total || 0,
+  };
+};
+
+export const fetchAllTokenOwners = async (address: string): Promise<TokenOwner[]> =>
+  fetchAll((cursor) => fetchTokenOwners(address, cursor));
+
+const fetchTokenOwners = async (address: string, cursor?: string): Promise<MoralisResults<TokenOwner>> => {
+  const response = await Moralis.Web3API.token.getNFTOwners({ address, chain: 'eth', limit: moralisPageLimit, cursor });
+
+  return {
+    data:
+      response.result?.map(
+        ({ token_id, owner_of, amount }): TokenOwner => ({
+          tokenId: token_id,
+          ownerAddress: owner_of,
+          amount: amount || '1',
+        }),
+      ) || [],
     cursor: response.cursor,
     page: response.page || 0,
     pageSize: response.page_size || 0,
@@ -40,9 +62,15 @@ const fetchAll = async <T, R extends MoralisResults<T>>(fetch: (cursor?: string)
       const partialResults = await fetch(cursor);
       allResults.push(...partialResults.data);
 
-      console.log(`Fetched page ${partialResults.page} of ${calcNumPages(partialResults)}`);
+      const totalPages = calcNumPages(partialResults);
+      console.log(`Fetched page ${partialResults.page} of ${totalPages}`);
 
       cursor = partialResults.cursor;
+
+      if (partialResults.page > totalPages) {
+        console.warn(`Too many pages. Stopping`);
+        cursor = '';
+      }
     } catch (e) {
       if (e.message.startsWith('Too many requests')) {
         console.warn('Too many requests. Waiting 5 seconds...');
