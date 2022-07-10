@@ -1,6 +1,6 @@
 import { writeDataToFile } from '../../services/files';
 import { fetchAllNFTOwners, fetchAllTokenOwners } from '../../services/moralis';
-import { buildCitizenOwners, groupNFTsByOwner } from '../../services/owners';
+import { buildCitizenOwners, calcCitizenTotalsByOwner, groupNFTsByOwner } from '../../services/owners';
 import { print } from '../commands/cmd';
 
 export interface FetchNFTOwnersOptions {
@@ -34,9 +34,7 @@ export const fetchCitizenOwners = async (
 
   const results = buildCitizenOwners(await fetchAllTokenOwners(address));
   if (totalsByOwner) {
-    // todo: fix
-
-    await writeDataToFile(results, outputFile);
+    await writeDataToFile(calcCitizenTotalsByOwner(results), outputFile);
   } else {
     await writeDataToFile(results, outputFile);
   }

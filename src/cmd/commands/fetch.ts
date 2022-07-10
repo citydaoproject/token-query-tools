@@ -26,7 +26,7 @@ interface CitizenOwnersParams {
 program
   .command('citizen-owners')
   .description('Query citizen owners. Note: currently only works with ERC1155-based citizen tokens')
-  .requiredOption('--address <address>', 'The citizen token address')
+  .option('--address <address>', 'The citizen token address', '0x7EeF591A6CC0403b9652E98E88476fe1bF31dDeb')
   .requiredOption('--output-file <file>', 'The file to store the token owner addresses per ID')
   .option('--totals-by-owner', 'Builds a map of the totals by owner')
   .action(({ address, outputFile, totalsByOwner }: CitizenOwnersParams, cmd: ProgramSubCommand) =>

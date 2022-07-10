@@ -74,7 +74,6 @@ const fetchAll = async <T, R extends MoralisResults<T>>(fetch: (cursor?: string)
     } catch (e) {
       if (e.message.startsWith('Too many requests')) {
         console.warn('Too many requests. Waiting 5 seconds...');
-        await limiter.removeTokens(limiter.getTokensRemaining());
         await new Promise((resolve) => {
           setTimeout(resolve, 5000);
         });

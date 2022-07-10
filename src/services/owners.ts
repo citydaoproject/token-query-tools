@@ -81,6 +81,15 @@ export const buildCitizenOwners = (owners: TokenOwner[]): CitizenOwner[] => [
     .values(),
 ];
 
+const firstCitizenMultiplier = 10;
+const founderCitizenMultiplier = 3;
+
+export const calcCitizenTotalsByOwner = (citizens: CitizenOwner[]): CitizenOwnerCounts =>
+  buildObject(citizens, ({ ownerAddress, first, founder, citizen }) => [
+    ownerAddress,
+    first * firstCitizenMultiplier + founder * founderCitizenMultiplier + citizen,
+  ]);
+
 const sortNFTIds = ({ ownerAddress, nftIds }: OwnerAndNFTs) => ({
   ownerAddress,
   nftIds: nftIds.sort((first, second) => parseInt(first, 10) - parseInt(second, 10)),
