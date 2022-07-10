@@ -36,12 +36,15 @@ export const fetchAllNFTOwners = async (address: string): Promise<NFTOwner[]> =>
   return allResults;
 };
 
-interface FetchNFTOwnersResults {
-  owners: NFTOwner[];
+interface MoralisResults {
   cursor?: string;
   page: number;
   pageSize: number;
   total: number;
+}
+
+interface FetchNFTOwnersResults extends MoralisResults {
+  owners: NFTOwner[];
 }
 
 const fetchNFTOwners = async (address: string, cursor?: string): Promise<FetchNFTOwnersResults> => {

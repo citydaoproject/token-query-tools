@@ -3,6 +3,10 @@ export interface NFTOwner {
   ownerAddress: string;
 }
 
+export interface OwnerNFTs {
+  [ownerAddress: string]: string[];
+}
+
 export interface CitizenOwner {
   ownerAddress: string;
   first: number;
@@ -20,13 +24,13 @@ export enum CitizenTokenType {
   citizen = 42,
 }
 
-export interface OwnerWithNFTs {
+interface OwnerAndNFTs {
   ownerAddress: string;
   nftIds: string[];
 }
 
-export const groupNFTsWithOwners = (owners: NFTOwner[]): OwnerWithNFTs[] =>
-  sortOwnersWithNFTs(
+export const groupNFTsByOwner = (owners: NFTOwner[]): OwnerNFTs =>
+  buildObject(
     [
       ...owners
         .reduce((nftsByOwner, { ownerAddress, nftId }) => {
@@ -35,29 +39,24 @@ export const groupNFTsWithOwners = (owners: NFTOwner[]): OwnerWithNFTs[] =>
           }
           nftsByOwner.get(ownerAddress)!.nftIds.push(nftId);
           return nftsByOwner;
-        }, new Map<string, OwnerWithNFTs>())
+        }, new Map<string, OwnerAndNFTs>())
         .values(),
     ].map(sortNFTIds),
+    ({ ownerAddress, nftIds }) => [ownerAddress, nftIds],
   );
 
-const sortOwnersWithNFTs = (ownersWithNFTs: OwnerWithNFTs[]) =>
-  ownersWithNFTs.sort((first, second) => {
-    if (first.nftIds.length !== second.nftIds.length) {
-      return second.nftIds.length - first.nftIds.length;
-    }
-
-    if (first.ownerAddress < second.ownerAddress) {
-      return -1;
-    }
-
-    if (first.ownerAddress > second.ownerAddress) {
-      return 1;
-    }
-
-    return 0;
-  });
-
-const sortNFTIds = ({ ownerAddress, nftIds }: OwnerWithNFTs) => ({
+const sortNFTIds = ({ ownerAddress, nftIds }: OwnerAndNFTs) => ({
   ownerAddress,
   nftIds: nftIds.sort((first, second) => parseInt(first, 10) - parseInt(second, 10)),
 });
+
+export type TypedObject<K extends string, V> = {
+  [key in K]: V;
+};
+
+const buildObject = <O, K extends string, V>(objects: O[], extract: (o: O) => [K, V]): TypedObject<K, V> =>
+  objects.reduce((result, currentValue) => {
+    const [k, v] = extract(currentValue);
+    result[k] = v;
+    return result;
+  }, {} as TypedObject<K, V>);

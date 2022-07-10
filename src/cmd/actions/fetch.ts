@@ -1,16 +1,22 @@
 import { writeDataToFile } from '../../services/files';
 import { fetchAllNFTOwners } from '../../services/moralis';
+import { groupNFTsByOwner } from '../../services/owners';
 import { print } from '../commands/cmd';
 
 export interface FetchNFTOwnersOptions {
-  asMap?: boolean;
+  byOwner?: boolean;
 }
 
-export const fetchNFTOwners = async (address: string, outputFile: string, { asMap }: FetchNFTOwnersOptions = {}) => {
+export const fetchNFTOwners = async (address: string, outputFile: string, { byOwner }: FetchNFTOwnersOptions = {}) => {
   print(`Fetching NFT ${address} data into '${outputFile}'...`);
 
   const results = await fetchAllNFTOwners(address);
-  await writeDataToFile(results, outputFile);
+
+  if (byOwner) {
+    await writeDataToFile(groupNFTsByOwner(results), outputFile);
+  } else {
+    await writeDataToFile(results, outputFile);
+  }
 
   print('Done.');
 };
