@@ -29,6 +29,12 @@
       "pre-push": "npm run lint"
     }
   },
+  "dependencies": {
+    "commander": "9.3.0",
+    "dotenv": "16.0.1",
+    "limiter": "2.1.0",
+    "moralis": "1.8.1"
+  },
   "devDependencies": {
     "@types/jest": "28.1.4",
     "@types/node": "16.11.42",
@@ -66,10 +72,5 @@
     "scripts": {
       "postchangelog": "npm run pretty"
     }
-  },
-  "dependencies": {
-    "commander": "9.3.0",
-    "dotenv": "16.0.1",
-    "moralis": "1.8.1"
   }
 }

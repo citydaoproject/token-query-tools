@@ -1,8 +1,11 @@
+import { RateLimiter } from 'limiter';
 import Moralis from 'moralis/node';
-import { moralisApplicationId, moralisServerUrl } from './config';
+import { moralisApplicationId, moralisRateLimitPerMinute, moralisServerUrl } from './config';
 import { NFTOwner } from './owners';
 
 export const fetchAllNFTOwners = async (address: string): Promise<NFTOwner[]> => {
+  const limiter = new RateLimiter({ tokensPerInterval: moralisRateLimitPerMinute, interval: 'minute' });
+
   await Moralis.start({ serverUrl: moralisServerUrl, appId: moralisApplicationId });
 
   const allResults: NFTOwner[] = [];
@@ -10,6 +13,7 @@ export const fetchAllNFTOwners = async (address: string): Promise<NFTOwner[]> =>
   let cursor: string | undefined = undefined;
   do {
     try {
+      await limiter.removeTokens(1);
       const partialResults = await fetchNFTOwners(address, cursor);
       allResults.push(...partialResults.owners);
 
@@ -19,6 +23,7 @@ export const fetchAllNFTOwners = async (address: string): Promise<NFTOwner[]> =>
     } catch (e) {
       if (e.message.startsWith('Too many requests')) {
         console.warn('Too many requests. Waiting 5 seconds...');
+        await limiter.removeTokens(limiter.getTokensRemaining());
         await new Promise((resolve) => {
           setTimeout(resolve, 5000);
         });
@@ -26,7 +31,7 @@ export const fetchAllNFTOwners = async (address: string): Promise<NFTOwner[]> =>
         throw e;
       }
     }
-  } while (cursor !== undefined && cursor !== '');
+  } while (cursor);
 
   return allResults;
 };

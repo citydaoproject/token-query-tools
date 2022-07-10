@@ -12,6 +12,25 @@
     npm install
     ```
 
+### Moralis
+
+Set up a free node on [Moralis](https://moralis.io/).
+
+NOTE: Free nodes will suspend after 3 days and terminate 24 days after that.
+
+1. Click _Start for Free_ on the Moralis website
+2. Click _Sign up_ if you don't have an account
+3. Click _Create New Dapp_
+4. Select Environment: _Mainnet_
+5. Select Network: Eth
+6. Click _Proceed_
+7. Select Region: New York (or close to you)
+8. Click _Proceed_
+9. Name your Dapp something like 'CityDAO Token Query'
+10. Click _Create Your Dapp_
+11. When the Dapp is created, click _Settings_
+12. You will need the _Dapp URL_ and _Application ID_ for the following step
+
 ### Environment Setup
 
 Copy `example.env` to `.env` and fill in the values
