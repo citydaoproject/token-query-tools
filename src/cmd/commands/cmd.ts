@@ -18,10 +18,7 @@ export const extractProgramOptions = (cmd: ProgramSubCommand): ProgramOptions =>
   return cmd.opts();
 };
 
-export const program = new Command()
-  .name('parcel-0-reveal-tools')
-  .description('Commands to prepare the parcel 0 reveal')
-  .version(version);
+export const program = new Command().name('token-query-tools').description('Commands to query tokens').version(version);
 
 export const print = (...args: any[]) => {
   console.log(...args);

@@ -10,3 +10,14 @@ export const fetchNFTOwners = async (address: string, outputFile: string) => {
 
   print('Done.');
 };
+
+export const fetchCitizenOwners = async (address: string, outputFile: string) => {
+  print(`Fetching Citizen ${address} data into '${outputFile}'...`);
+
+  // todo: fix
+
+  const results = await fetchAllNFTOwners(address);
+  await writeDataToFile(results, outputFile);
+
+  print('Done.');
+};

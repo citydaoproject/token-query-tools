@@ -3,6 +3,23 @@ export interface NFTOwner {
   ownerAddress: string;
 }
 
+export interface CitizenOwner {
+  ownerAddress: string;
+  first: number;
+  founder: number;
+  citizen: number;
+}
+
+export interface CitizenOwnerCounts {
+  [ownerAddress: string]: number;
+}
+
+export enum CitizenTokenType {
+  first = 7,
+  founder = 69,
+  citizen = 42,
+}
+
 export interface OwnerWithNFTs {
   ownerAddress: string;
   nftIds: string[];

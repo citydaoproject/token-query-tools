@@ -1,5 +1,3 @@
-import './ipfs';
-import './plots';
-import './snapshot';
+import './fetch';
 
 export { program } from './cmd';

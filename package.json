@@ -1,16 +1,16 @@
 {
-  "name": "@citydao/parcel-0-reveal-tools",
+  "name": "@citydao/token-query-tools",
   "description": "",
   "private": true,
   "license": "UNLICENSED",
   "version": "0.0.0",
-  "homepage": "https://github.com/citydaoproject/parcel-0-reveal-tools/wiki/Home",
+  "homepage": "https://github.com/citydaoproject/token-query-tools/wiki/Home",
   "repository": {
     "type": "git",
-    "url": "https://github.com/citydaoproject/parcel-0-reveal-tools"
+    "url": "https://github.com/citydaoproject/token-query-tools"
   },
   "bugs": {
-    "url": "https://github.com/citydaoproject/parcel-0-reveal-tools/issues"
+    "url": "https://github.com/citydaoproject/token-query-tools/issues"
   },
   "scripts": {
     "clean": "rm -rf dist && rm -rf out",
@@ -30,7 +30,6 @@
     }
   },
   "devDependencies": {
-    "@types/geojson": "7946.0.8",
     "@types/jest": "28.1.4",
     "@types/node": "16.11.42",
     "@typescript-eslint/eslint-plugin": "5.30.3",
@@ -60,7 +59,7 @@
     }
   },
   "standard-version": {
-    "issueUrlFormat": "https://github.com/citydaoproject/parcel-0-reveal-tools/issues/{{id}}",
+    "issueUrlFormat": "https://github.com/citydaoproject/token-query-tools/issues/{{id}}",
     "issuePrefixes": [
       "#"
     ],
